@@ -1,4 +1,4 @@
-```markdown
+
 ISL App
 
 This is a Flutter-based mobile application that allows users to convert various languages to Indian Sign Language (ISL). The app utilizes a Flask backend for language translation and ISL video retrieval. Users can input text or speech, which is then translated to English and subsequently converted to ISL. Relevant ISL videos are fetched from a database and displayed to the user, enabling them to learn and practice ISL.
@@ -22,7 +22,7 @@ This is a Flutter-based mobile application that allows users to convert various 
 
 The project is organized into the following folders:
 
-```
+
 isl_app/
 ├── assets/
 │   └── videos/
@@ -32,7 +32,6 @@ isl_app/
 │   └── requirements.txt
 └── lib/
     └── pages/
-```
 
 ## Setup Instructions
 

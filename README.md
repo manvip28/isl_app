@@ -13,7 +13,11 @@ This is a Flutter-based mobile application that allows users to convert various 
   - [Set Up Python Community Edition Plugin (For IDE)](#set-up-python-community-edition-plugin-for-ide)
   - [Set Up NLP Packages](#set-up-nlp-packages)
   - [Run the Flask Server](#run-the-flask-server)
-  - [Running the App](#running-the-app)
+- [Flutter Setup Instructions](#flutter-setup-instructions)
+  - [Add Dependencies](#add-dependencies)
+  - [Add Assets](#add-assets)
+  - [Run Flutter Pub Get](#run-flutter-pub-get)
+- [Running the App](#running-the-app)
 - [Requirements](#requirements)
 - [Versioning](#versioning)
 - [Troubleshooting](#troubleshooting)
@@ -100,6 +104,36 @@ To ensure the app runs smoothly, you need to create and import the necessary NLP
    ```python
    exit()
    ```
+## Flutter Setup Instructions 
+## Add Dependencies:
+Open pubspec.yaml and add the following dependencies under dependencies::
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  video_player: ^2.8.0
+  path_provider: ^2.0.11
+  http: ^0.13.5
+```
+## Add Assets:
+Under flutter: in the pubspec.yaml, specify the video assets:
+
+```yaml
+flutter:
+  assets:
+    - assets/videos/Abacus.mp4
+    - assets/videos/Abstract.mp4
+    - assets/videos/Chocolate.mp4
+    - assets/videos/Like.mp4
+```
+
+## Run flutter pub get:
+After modifying pubspec.yaml, run the following command in the terminal to install dependencies and include assets:
+
+```bash
+flutter pub get
+```
 
 ### Run the Flask Server
 

@@ -113,6 +113,15 @@ To ensure the app runs smoothly, you need to create and import the necessary NLP
    ```python
    exit()
    ```
+
+### Run the Flask Server
+
+To run the Flask server, type the following command in the command prompt:
+
+```bash
+python app.py
+```
+
 ## Flutter Setup Instructions 
 ### Add Dependencies:
 Open pubspec.yaml and add the following dependencies under dependencies::
@@ -144,15 +153,8 @@ After modifying pubspec.yaml, run the following command in the terminal to insta
 flutter pub get
 ```
 
-### Run the Flask Server
 
-To run the Flask server, type the following command in the command prompt:
-
-```bash
-python app.py
-```
-
-### Running the App
+## Running the App
 
 To run the application in the correct order, follow these steps:
 

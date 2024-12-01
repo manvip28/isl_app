@@ -22,7 +22,7 @@ This is a Flutter-based mobile application that allows users to convert various 
 
 The project is organized into the following folders:
 
-
+```bash
 isl_app/
 ├── assets/
 │   └── videos/
@@ -32,6 +32,8 @@ isl_app/
 │   └── requirements.txt
 └── lib/
     └── pages/
+
+```
 
 ## Setup Instructions
 

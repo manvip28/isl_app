@@ -35,7 +35,13 @@ isl_app/
 │   ├── app.py
 │   └── requirements.txt
 └── lib/
+    ├── main.dart
     └── pages/
+        ├── home_page.dart
+        ├── isl_to_language_page.dart
+        ├── language_to_isl_page.dart
+        └── result_page.dart
+    
 
 ```
 

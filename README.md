@@ -114,7 +114,7 @@ To ensure the app runs smoothly, you need to create and import the necessary NLP
    exit()
    ```
 ## Flutter Setup Instructions 
-## Add Dependencies:
+### Add Dependencies:
 Open pubspec.yaml and add the following dependencies under dependencies::
 
 ```yaml
@@ -125,7 +125,7 @@ dependencies:
   path_provider: ^2.0.11
   http: ^0.13.5
 ```
-## Add Assets:
+### Add Assets:
 Under flutter: in the pubspec.yaml, specify the video assets:
 
 ```yaml
@@ -137,7 +137,7 @@ flutter:
     - assets/videos/Like.mp4
 ```
 
-## Run flutter pub get:
+### Run flutter pub get:
 After modifying pubspec.yaml, run the following command in the terminal to install dependencies and include assets:
 
 ```bash

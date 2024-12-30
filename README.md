@@ -193,7 +193,10 @@ To run the application in the correct order, follow these steps:
 
 1. Start the Android emulator in Android Studio (or connect your physical device).
 2. Run the Flask server:
-   - If using an emulator, run the server using python app.py.
+   - If using an emulator, run the server using
+     ```bash
+     python app.py
+     ```
    - If using a physical device, ensure the Flask server is running and properly set up for the device, as described in the [Run the Flask Server and Set Up for Physical Device](#run-the-flask-server-and-set-up-for-physical-device) section.
 3. Run main.dart to start the Flutter app.
 

@@ -15,10 +15,12 @@ Background: Indian Sign Language (ISL) is a visual-gestural language used by dea
   - [Install Dependencies](#install-dependencies)
   - [Set Up Python Community Edition Plugin (For IDE)](#set-up-python-community-edition-plugin-for-ide)
   - [Set Up NLP Packages](#set-up-nlp-packages)
-  - [Run the Flask Server](#run-the-flask-server)
+  - [Run the Flask Server and Set Up for Physical Device](#run-the-flask-server-and-set-up-for-physical-device)
 - [Flutter Setup Instructions](#flutter-setup-instructions)
   - [Add Dependencies](#add-dependencies)
   - [Add Assets](#add-assets)
+  - [Add Camera, Internet, and Microphone Permissions](#add-camera-internet-and-microphone-permissions)
+  - [Modify `language_to_isl_page.dart`](#modify-language_to_isl_pagedart)
   - [Run Flutter Pub Get](#run-flutter-pub-get)
 - [Running the App](#running-the-app)
 - [Requirements](#requirements)
@@ -31,12 +33,17 @@ The project is organized into the following folders:
 
 ```bash
 isl_app/
-├── assets/
-│   └── videos/
-├── backend/
-│   ├── venv/
-│   ├── app.py
-│   └── requirements.txt
+└── android/
+    ├── app/
+        ├── src/
+            ├── debug/
+                └── AndroidManifest.xml  
+└── assets/
+    └── videos/
+└── backend/
+    ├── venv/
+    ├── app.py
+    └── requirements.txt
 └── lib/
     ├── main.dart
     └── pages/
@@ -44,6 +51,7 @@ isl_app/
         ├── isl_to_language_page.dart
         ├── language_to_isl_page.dart
         └── result_page.dart
+
     
 
 ```
@@ -114,13 +122,27 @@ To ensure the app runs smoothly, you need to create and import the necessary NLP
    exit()
    ```
 
-### Run the Flask Server
+### Run the Flask Server and Set Up for Physical Device
+To run the Flask server and use the app on a physical device, follow these steps:
+1. Start the Flask Server: Open a terminal and navigate to the backend folder. Then run the following command to start the Flask server:
+   ```bash
+   flask run --host=0.0.0.0 --port=5000
+   ```
+   You can replace 5000 with any port number of your choice.
 
-To run the Flask server, type the following command in the command prompt:
+2. Set Up ADB for Physical Device:
+   Ensure ADB (Android Debug Bridge) is installed on your laptop (it comes by default with Android Studio).
+   i. Open a new terminal window, and navigate to the platform-tools directory. This can be found under C:\Users\<YourUser>\AppData\Local\Android\Sdk\platform-tools (on Windows).
+   ii. Run the following command to reverse the port for the Flask server to allow the physical device to communicate with the server:
+      ```bash
+      .\adb.exe reverse tcp:5000 tcp:5000
+      ```
+      This command ensures that the physical device can connect to the Flask server running on your laptop.
+3. Run the Flask Server with Python (For Emulator): Alternatively, if you're using an emulator, you can run the Flask server using Python directly by typing the following command:
+  ```bash
+  python app.py
+  ```
 
-```bash
-python app.py
-```
 
 ## Flutter Setup Instructions 
 ### Add Dependencies:
@@ -145,6 +167,17 @@ flutter:
     - assets/videos/Chocolate.mp4
     - assets/videos/Like.mp4
 ```
+### Add Camera, Internet, and Microphone Permissions:
+To add the necessary permissions, open the AndroidManifest.xml file located in android/app/src/debug/AndroidManifest.xml, and add the following permissions:
+
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.MICROPHONE" />
+```
+
+### Modify language_to_isl_page.dart:
+In line 81 of language_to_isl_page.dart, replace with your machine's IP address (e.g., http://192.168.x.x:5000/convert_to_isl), or use http://10.0.2.2:5000/convert_to_isl if using an emulator.
 
 ### Run flutter pub get:
 After modifying pubspec.yaml, run the following command in the terminal to install dependencies and include assets:
@@ -158,9 +191,11 @@ flutter pub get
 
 To run the application in the correct order, follow these steps:
 
-1. Start the **Android emulator** in Android Studio.
-2. Run the **Flask server** using the command `python app.py`.
-3. Finally, run **main.dart** to start the Flutter app.
+1. Start the Android emulator in Android Studio (or connect your physical device).
+2. Run the Flask server:
+   - If using an emulator, run the server using python app.py.
+   - If using a physical device, ensure the Flask server is running and properly set up for the device, as described in the [Run the Flask Server and Set Up for Physical Device](#run-the-flask-server-and-set-up-for-physical-device) section.
+3. Run main.dart to start the Flutter app.
 
 ## Requirements
 

@@ -132,8 +132,8 @@ To run the Flask server and use the app on a physical device, follow these steps
 
 2. Set Up ADB for Physical Device:
    Ensure ADB (Android Debug Bridge) is installed on your laptop (it comes by default with Android Studio).
-   i. Open a new terminal window, and navigate to the platform-tools directory. This can be found under C:\Users\<YourUser>\AppData\Local\Android\Sdk\platform-tools (on Windows).
-   ii. Run the following command to reverse the port for the Flask server to allow the physical device to communicate with the server:
+   - Open a new terminal window, and navigate to the platform-tools directory. This can be found under C:\Users\<YourUser>\AppData\Local\Android\Sdk\platform-tools (on Windows).
+   - Run the following command to reverse the port for the Flask server to allow the physical device to communicate with the server:
       ```bash
       .\adb.exe reverse tcp:5000 tcp:5000
       ```

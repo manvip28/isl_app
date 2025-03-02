@@ -20,7 +20,7 @@ Background: Indian Sign Language (ISL) is a visual-gestural language used by dea
   - [Add Dependencies](#add-dependencies)
   - [Add Assets](#add-assets)
   - [Add Camera, Internet, and Microphone Permissions](#add-camera-internet-and-microphone-permissions)
-  - [Modify `language_to_isl_page.dart`](#modify-language_to_isl_pagedart)
+  - [Modify `language_to_isl_page.dart` and `main.dart`](#modify-language_to_isl_pagedart_and_maindart)
   - [Run Flutter Pub Get](#run-flutter-pub-get)
 - [Running the App](#running-the-app)
 - [Requirements](#requirements)
@@ -156,12 +156,12 @@ To add the necessary permissions, open the AndroidManifest.xml file located in a
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.MICROPHONE" />
 ```
-### Replace <SUPABASE_PROJECT_URL> and <SUPABASE_ANON_KEY>
+
+
+### Modify language_to_isl_page.dart and main.dart:
+In line 81 of language_to_isl_page.dart, replace with your machine's IP address (e.g., http://192.168.x.x:5000/convert_to_isl), or use http://10.0.2.2:5000/convert_to_isl if using an emulator.
 In your main.dart, ensure you replace the placeholders with your actual Supabase project URL and anonymous key:
 <SUPABASE_PROJECT_URL> & <SUPABASE_ANON_KEY>
-
-### Modify language_to_isl_page.dart:
-In line 81 of language_to_isl_page.dart, replace with your machine's IP address (e.g., http://192.168.x.x:5000/convert_to_isl), or use http://10.0.2.2:5000/convert_to_isl if using an emulator.
 
 ### Run flutter pub get:
 After modifying pubspec.yaml, run the following command in the terminal to install dependencies and include assets:

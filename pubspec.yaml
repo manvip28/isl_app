@@ -30,10 +30,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  camera: ^0.10.5+2
+  tflite_flutter: ^0.11.0
+  permission_handler: ^10.3.0
+  image: ^4.1.3
   video_player: ^2.8.0
   path_provider: ^2.0.11
-  http: ^0.13.5
-
+  http: ^1.2.2
+  speech_to_text: ^7.0.0
+  translator: ^1.0.3+1
+  supabase_flutter: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -61,6 +67,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/sign_language_model.tflite
     - assets/videos/Abacus.mp4
     - assets/videos/Abstract.mp4
     - assets/videos/Chocolate.mp4

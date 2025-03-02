@@ -12,7 +12,7 @@ void main() async {
 
   await Supabase.initialize(
     url: <SUPABASE_PROJECT_URL> , // Replace with your Supabase project URL
-    anonKey: <SUPABASE_ANON_KEY] , // Replace with your Supabase anon key
+    anonKey: <SUPABASE_ANON_KEY> , // Replace with your Supabase anon key
   );
 
   runApp(ISLTranslatorApp());

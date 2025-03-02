@@ -39,7 +39,7 @@ isl_app/
             ├── debug/
                 └── AndroidManifest.xml  
 └── assets/
-    └── videos/
+    └── sign_langauage_model.tflite
 └── backend/
     ├── venv/
     ├── app.py
@@ -146,27 +146,8 @@ To run the Flask server and use the app on a physical device, follow these steps
 
 ## Flutter Setup Instructions 
 ### Add Dependencies:
-Open pubspec.yaml and add the following dependencies under dependencies::
+Open pubspec.yaml and add the following dependencies mentioned in the pubspec.yaml
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  video_player: ^2.8.0
-  path_provider: ^2.0.11
-  http: ^0.13.5
-```
-### Add Assets:
-Under flutter: in the pubspec.yaml, specify the video assets:
-
-```yaml
-flutter:
-  assets:
-    - assets/videos/Abacus.mp4
-    - assets/videos/Abstract.mp4
-    - assets/videos/Chocolate.mp4
-    - assets/videos/Like.mp4
-```
 ### Add Camera, Internet, and Microphone Permissions:
 To add the necessary permissions, open the AndroidManifest.xml file located in android/app/src/debug/AndroidManifest.xml, and add the following permissions:
 
@@ -175,6 +156,9 @@ To add the necessary permissions, open the AndroidManifest.xml file located in a
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.MICROPHONE" />
 ```
+### Replace <SUPABASE_PROJECT_URL> and <SUPABASE_ANON_KEY>
+In your main.dart, ensure you replace the placeholders with your actual Supabase project URL and anonymous key:
+<SUPABASE_PROJECT_URL> & <SUPABASE_ANON_KEY>
 
 ### Modify language_to_isl_page.dart:
 In line 81 of language_to_isl_page.dart, replace with your machine's IP address (e.g., http://192.168.x.x:5000/convert_to_isl), or use http://10.0.2.2:5000/convert_to_isl if using an emulator.

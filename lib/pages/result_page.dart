@@ -140,56 +140,70 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Video Result')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Result Video',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple[800]),
-              ),
-              SizedBox(height: 30),
-              if (_videoController != null && _videoController!.value.isInitialized)
-                AspectRatio(
-                  aspectRatio: _videoController!.value.aspectRatio,
-                  child: VideoPlayer(_videoController!),
-                )
-              else if (_videoLoadError)
-                Text(
-                  'Sorry, no videos found.',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
-                )
-              else
-                CircularProgressIndicator(),
-              SizedBox(height: 20),
-              Text(
-                'Showing videos for: ${_wordList.join(' ')}',
-                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Properly clean up before navigating
-                  if (_videoController != null) {
-                    _videoController!.pause();
-                    _videoController!.removeListener(() {});
-                  }
-                  Navigator.popUntil(context, ModalRoute.withName('/'));
-                },
-                child: Text('Back to Home'),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.deepPurple[600],
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  elevation: 5,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Result Video',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple[800]),
+                      ),
+                      SizedBox(height: 30),
+                      if (_videoController != null && _videoController!.value.isInitialized)
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxHeight: constraints.maxHeight * 0.7, // Limit video height to 70% of screen
+                          ),
+                          child: AspectRatio(
+                            aspectRatio: _videoController!.value.aspectRatio,
+                            child: VideoPlayer(_videoController!),
+                          ),
+                        )
+                      else if (_videoLoadError)
+                        Text(
+                          'Sorry, no videos found.',
+                          style: TextStyle(fontSize: 18, color: Colors.red),
+                        )
+                      else
+                        CircularProgressIndicator(),
+                      SizedBox(height: 20),
+                      Text(
+                        'Showing videos for: ${_wordList.join(' ')}',
+                        style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          // Properly clean up before navigating
+                          if (_videoController != null) {
+                            _videoController!.pause();
+                            _videoController!.removeListener(() {});
+                          }
+                          Navigator.popUntil(context, ModalRoute.withName('/'));
+                        },
+                        child: Text('Back to Home'),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.deepPurple[600],
+                          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          elevation: 5,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

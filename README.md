@@ -20,8 +20,40 @@ https://github.com/manvip28/isl_app/releases/tag/v1.0.0
 **Tested on:** Android 11+  
 **Note:** Allow “Install from unknown sources” when installing.
 
+##  Tech Stack
 
-## Table of Contents
+### Frontend
+- Flutter (Android & Web)
+- Dart
+- Flutter Web
+
+### Backend
+- Python
+- Flask
+- Flask-CORS
+
+### Machine Learning & NLP
+- TensorFlow Lite (ISL model inference)
+- NLTK (tokenization, POS tagging, lemmatization)
+- Custom NLP pipeline for English → ISL grammar conversion
+
+### Storage & Cloud
+- Supabase Storage (ISL video assets)
+- Firebase Hosting (Flutter Web frontend)
+- Render (Flask backend API)
+
+### Mobile & Platform
+- Android (APK release)
+- Flutter Web (browser-based demo)
+
+### DevOps & Tools
+- Git & GitHub
+- GitHub Releases (APK distribution)
+- Firebase CLI
+- Render deployment
+
+
+## Developer Setup
 
 - [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)

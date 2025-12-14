@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ResultPage extends StatefulWidget {
   @override
@@ -10,101 +11,135 @@ class _ResultPageState extends State<ResultPage> {
   VideoPlayerController? _videoController;
   bool _videoLoadError = false;
   List<String> _wordList = [];
+  List<String> _videoUrls = [];
+  final SupabaseClient supabase = Supabase.instance.client;
+  bool _isDataLoaded = false;
 
-  // Map the input words to corresponding videos
-  Map<String, String> videoMap = {
-    'abacus': 'assets/videos/Abacus.mp4',
-    'abstract': 'assets/videos/Abstract.mp4',
-    'chocolate':'assets/videos/Chocolate.mp4',
-    'like':'assets/videos/Like.mp4'
-
-    // Add more words and video paths here
-  };
+  @override
+  void initState() {
+    super.initState();
+    // Move from didChangeDependencies to initState
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _loadCombinedVideo();
+    // Only load videos once to prevent multiple calls
+    if (!_isDataLoaded) {
+      _isDataLoaded = true;
+      _loadVideos();
+    }
   }
 
-  // Load and combine videos for multiple words
-  void _loadCombinedVideo() async {
-    // Get the input text from route arguments
-    final String inputText = ModalRoute.of(context)!.settings.arguments as String;
+  Future<void> _loadVideos() async {
+    final String? inputText = ModalRoute.of(context)?.settings.arguments as String?;
 
-    // Split the input text into words
-    _wordList = inputText.toLowerCase().split(RegExp(r'\s+'));
+    print("Received inputText: $inputText"); // Debugging line
 
-    // Find video paths for the words
-    List<String> validVideoPaths = [];
-    for (String word in _wordList) {
-      if (videoMap.containsKey(word)) {
-        validVideoPaths.add(videoMap[word]!);
+    if (inputText == null || inputText.isEmpty) {
+      if (mounted) {
+        setState(() => _videoLoadError = true);
       }
-    }
-
-    // Check if any videos were found
-    if (validVideoPaths.isEmpty) {
-      setState(() {
-        _videoLoadError = true;
-      });
       return;
     }
 
-    try {
-      // Initialize video controller with the first video
-      _videoController = VideoPlayerController.asset(validVideoPaths[0]);
-      await _videoController!.initialize();
+    _wordList = inputText.toLowerCase().split(RegExp(r'\s+'));
 
-      // Set up a listener to play the next video when one finishes
-      _videoController!.addListener(() {
-        if (_videoController!.value.position >= _videoController!.value.duration) {
-          _playNextVideo(validVideoPaths);
-        }
-      });
+    List<String> validVideoUrls = [];
 
-      // Start playing
-      setState(() {});
-      _videoController!.play();
-    } catch (error) {
+    for (String word in _wordList) {
+      String? videoUrl = _fetchVideoUrl(word);
+      if (videoUrl != null) {
+        validVideoUrls.add(videoUrl);
+      }
+    }
+
+    if (validVideoUrls.isEmpty) {
+      if (mounted) {
+        setState(() => _videoLoadError = true);
+      }
+      return;
+    }
+
+    if (mounted) {
       setState(() {
-        _videoLoadError = true;
+        _videoUrls = validVideoUrls;
       });
+      _initializeVideo(0);
+    }
+  }
+
+  String? _fetchVideoUrl(String word) {
+    try {
+      // Using getPublicUrl instead of createSignedUrl
+      final String videoUrl = supabase.storage
+          .from('videos')
+          .getPublicUrl('$word.mp4');
+
+      if (videoUrl.isNotEmpty) {
+        print("Fetched URL for $word: $videoUrl");
+        return videoUrl;
+      } else {
+        print("No valid URL for $word");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching video URL for $word: $e");
+      return null;
+    }
+  }
+
+  void _initializeVideo(int index) async {
+    if (index >= _videoUrls.length) return;
+
+    try {
+      VideoPlayerController newController =
+      VideoPlayerController.networkUrl(Uri.parse(_videoUrls[index]));
+
+      await newController.initialize();
+
+      // Remove reference to previous controller before assigning new one
+      final oldController = _videoController;
+
+      if (mounted) {
+        setState(() {
+          _videoController = newController;
+        });
+
+        // Dispose of the old controller after state is updated
+        if (oldController != null) {
+          oldController.removeListener(() {});
+          oldController.dispose();
+        }
+
+        newController.addListener(() {
+          if (newController.value.position >= newController.value.duration) {
+            _playNextVideo(index);
+          }
+        });
+
+        _videoController!.play();
+      } else {
+        newController.dispose();
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _videoLoadError = true);
+      }
       print("Error loading video: $error");
     }
   }
 
-  // Method to play the next video in the sequence
-  void _playNextVideo(List<String> videoPaths) async {
-    // Dispose of the current video controller
-    await _videoController?.dispose();
-
-    // Find the index of the current video
-    int currentIndex = videoPaths.indexOf(_videoController!.dataSource);
-
-    // If there's a next video, play it
-    if (currentIndex < videoPaths.length - 1) {
-      _videoController = VideoPlayerController.asset(videoPaths[currentIndex + 1]);
-      await _videoController!.initialize();
-
-      // Set up listener for the next video
-      _videoController!.addListener(() {
-        if (_videoController!.value.position >= _videoController!.value.duration) {
-          _playNextVideo(videoPaths);
-        }
-      });
-
-      setState(() {});
-      _videoController!.play();
+  void _playNextVideo(int currentIndex) {
+    if (currentIndex < _videoUrls.length - 1 && mounted) {
+      _initializeVideo(currentIndex + 1);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Video Result'),
-      ),
+      appBar: AppBar(title: Text('Video Result')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -113,43 +148,34 @@ class _ResultPageState extends State<ResultPage> {
             children: [
               Text(
                 'Result Video',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple[800],
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.deepPurple[800]),
               ),
               SizedBox(height: 30),
-              // Video player section
               if (_videoController != null && _videoController!.value.isInitialized)
                 AspectRatio(
                   aspectRatio: _videoController!.value.aspectRatio,
                   child: VideoPlayer(_videoController!),
-                ),
-              if (_videoController == null || !_videoController!.value.isInitialized)
-                if (_videoLoadError)
-                  Text(
-                    'Sorry, no videos could be found for the entered words.',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.red,
-                    ),
-                  )
-                else
-                  CircularProgressIndicator(),
+                )
+              else if (_videoLoadError)
+                Text(
+                  'Sorry, no videos found.',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                )
+              else
+                CircularProgressIndicator(),
               SizedBox(height: 20),
-              // Display the words being shown
               Text(
-                'Showing videos for: ${_wordList.join(', ')}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                ),
+                'Showing videos for: ${_wordList.join(' ')}',
+                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _videoController?.dispose();
+                  // Properly clean up before navigating
+                  if (_videoController != null) {
+                    _videoController!.pause();
+                    _videoController!.removeListener(() {});
+                  }
                   Navigator.popUntil(context, ModalRoute.withName('/'));
                 },
                 child: Text('Back to Home'),
@@ -157,9 +183,7 @@ class _ResultPageState extends State<ResultPage> {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.deepPurple[600],
                   padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   elevation: 5,
                 ),
               ),
@@ -172,7 +196,10 @@ class _ResultPageState extends State<ResultPage> {
 
   @override
   void dispose() {
-    _videoController?.dispose();
+    if (_videoController != null) {
+      _videoController!.removeListener(() {});
+      _videoController!.dispose();
+    }
     super.dispose();
   }
 }

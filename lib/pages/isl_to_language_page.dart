@@ -5,19 +5,12 @@ import 'package:camera/camera.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart' show rootBundle, ByteData;
+import 'package:google_fonts/google_fonts.dart';
 
 class IslToLanguagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Sign Language Detector',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: SignLanguageDetector(),
-    );
+    return SignLanguageDetector();
   }
 }
 
@@ -36,7 +29,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
 
   DateTime? _lastProcessedTime;
   static const Duration _processingInterval = Duration(milliseconds: 500);
-  static const Duration _pauseDuration = Duration(seconds: 30); // 30-second delay
+  static const Duration _pauseDuration = Duration(seconds: 30);
 
   final List<String> _characters = List.generate(26, (index) => String.fromCharCode(65 + index));
 
@@ -86,7 +79,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
 
       _cameraController = CameraController(
         frontCamera,
-        ResolutionPreset.low,
+        ResolutionPreset.medium, // Increased resolution for better display
         imageFormatGroup: ImageFormatGroup.yuv420,
       );
 
@@ -125,7 +118,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
 
     try {
       _cameraController!.startImageStream((CameraImage image) {
-        if (_isPaused) return; // Skip processing if paused
+        if (_isPaused) return;
 
         final now = DateTime.now();
         if (_lastProcessedTime == null ||
@@ -163,7 +156,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
         if (mounted) {
           setState(() {
             _detectedCharacter = detectedChar;
-            _isPaused = true; // Pause recognition after detection
+            _isPaused = true;
           });
 
           // Resume recognition after 30 seconds
@@ -171,7 +164,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
             if (mounted) {
               setState(() {
                 _isPaused = false;
-                _detectedCharacter = 'Waiting...'; // Reset detection message
+                _detectedCharacter = 'Waiting...';
               });
             }
           });
@@ -186,11 +179,9 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
 
   int _findMaxIndexWithConfidence(List<double> list, {double threshold = 0.5}) {
     double maxValue = list.reduce((curr, next) => curr > next ? curr : next);
-
     if (maxValue >= threshold) {
       return list.indexOf(maxValue);
     }
-
     return -1;
   }
 
@@ -240,19 +231,85 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Immersive feel
       appBar: AppBar(
-        title: Text('Sign Language Detector'),
+        title: Text('Sign Language Detector', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      extendBodyBehindAppBar: true,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
+          // Camera Preview
           _isCameraInitialized && _cameraController != null
               ? CameraPreview(_cameraController!)
-              : CircularProgressIndicator(),
-          SizedBox(height: 20),
-          Text(
-            'Detected: $_detectedCharacter',
-            style: TextStyle(fontSize: 24),
+              : Center(child: CircularProgressIndicator(color: Colors.white)),
+
+          // Overlay
+          Positioned(
+            bottom: 50,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 15,
+                    offset: Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Detected Character',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    _detectedCharacter,
+                    style: GoogleFonts.poppins(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF673AB7),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (_isPaused)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.timer_outlined, size: 16, color: Colors.orange),
+                          SizedBox(width: 4),
+                          Text(
+                            'Paused for 30s',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: Colors.orange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

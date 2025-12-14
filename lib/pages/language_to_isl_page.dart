@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:translator/translator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LanguageToISLPage extends StatefulWidget {
   @override
@@ -17,12 +18,10 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
 
   bool _isLoading = false;
   bool _isListening = false;
-  String _selectedSourceLanguage = 'en'; // Default source language
+  String _selectedSourceLanguage = 'en';
 
-  // List of supported languages for translation
   final List<Map<String, String>> _languages = [
     {'code': 'en', 'name': 'English'},
-
     // Indian Languages
     {'code': 'hi', 'name': 'Hindi'},
     {'code': 'mr', 'name': 'Marathi'},
@@ -34,7 +33,6 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
     {'code': 'kn', 'name': 'Kannada'},
     {'code': 'ml', 'name': 'Malayalam'},
     {'code': 'or', 'name': 'Odia'},
-
     // Other International Languages
     {'code': 'es', 'name': 'Spanish'},
     {'code': 'fr', 'name': 'French'},
@@ -45,10 +43,9 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
   @override
   void initState() {
     super.initState();
-    requestPermissions(); // Request permissions on app start
+    requestPermissions();
   }
 
-  // Request runtime permissions for camera and microphone
   void requestPermissions() async {
     await Permission.camera.request();
     await Permission.microphone.request();
@@ -60,12 +57,9 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
-      // First, translate to English if not already in English
       String textToConvert = _textController.text;
       if (_selectedSourceLanguage != 'en') {
         var translation = await _translator.translate(
@@ -76,26 +70,16 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
         textToConvert = translation.text;
       }
 
-      // Send to ISL conversion endpoint
       final response = await http.post(
-        Uri.parse('http://192.168.1.7:5000/convert_to_isl'),
-              // Replace <YOUR_COMPUTER_IP> with your machine's IP or <http://10.0.2.2:5000/convert_to_isl> in case of an emulator
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'text': textToConvert,
-        }),
+        Uri.parse('http://192.168.1.6:5000/convert_to_isl'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'text': textToConvert}),
       );
 
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
-
-        // Navigate to result page with ISL text
         Navigator.pushNamed(
           context,
           '/result',
@@ -105,9 +89,7 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
         _showSnackBar('Error converting text: ${response.body}', Colors.red);
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
       _showSnackBar('Network error: $e', Colors.red);
     }
   }
@@ -133,16 +115,16 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
 
   void _stopListening() {
     _speechToText.stop();
-    setState(() {
-      _isListening = false;
-    });
+    setState(() => _isListening = false);
   }
 
   void _showSnackBar(String message, Color backgroundColor) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message, style: GoogleFonts.poppins()),
         backgroundColor: backgroundColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -151,76 +133,138 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Language to ISL'),
+        title: Text('Text to ISL', style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Convert Text to ISL',
-              style: TextStyle(
-                fontSize: 22,
+              'Translate Text',
+              style: GoogleFonts.poppins(
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.deepPurple[800],
+                color: Color(0xFF311B92),
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
-            // Language Dropdown
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Source Language',
-                border: OutlineInputBorder(),
-              ),
-              value: _selectedSourceLanguage,
-              items: _languages.map((lang) {
-                return DropdownMenuItem(
-                  value: lang['code'],
-                  child: Text(lang['name']!),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedSourceLanguage = value!;
-                });
-              },
+            SizedBox(height: 8),
+            Text(
+              'Convert written text or speech into Indian Sign Language videos.',
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                hintText: 'Enter text to translate',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                prefixIcon: Icon(Icons.text_fields),
-                suffixIcon: IconButton(
-                  icon: Icon(_isListening ? Icons.mic_off : Icons.mic),
-                  onPressed: _isListening ? _stopListening : _startListening,
+            SizedBox(height: 32),
+
+            // Language Selector
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.language, color: Color(0xFF673AB7)),
+                    labelText: 'Source Language',
+                    labelStyle: GoogleFonts.poppins(color: Colors.grey[600]),
+                  ),
+                  value: _selectedSourceLanguage,
+                  icon: Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF673AB7)),
+                  items: _languages.map((lang) {
+                    return DropdownMenuItem(
+                      value: lang['code'],
+                      child: Text(lang['name']!, style: GoogleFonts.poppins()),
+                    );
+                  }).toList(),
+                  onChanged: (value) => setState(() => _selectedSourceLanguage = value!),
                 ),
               ),
-              maxLines: 3,
             ),
-            SizedBox(height: 20),
-            _isLoading
-                ? Center(child: CircularProgressIndicator())
-                : ElevatedButton.icon(
-              icon: Icon(Icons.translate, size: 30),
-              label: Text(
-                'Translate to ISL',
-                style: TextStyle(fontSize: 18),
+            SizedBox(height: 24),
+
+            // Text Input
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
-              onPressed: _convertToISL,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.deepPurple[600],
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+              child: TextField(
+                controller: _textController,
+                maxLines: 5,
+                style: GoogleFonts.poppins(fontSize: 16),
+                decoration: InputDecoration(
+                  hintText: 'Type something to translate...',
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(24),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 12.0, bottom: 12.0),
+                    child: IconButton(
+                      icon: Icon(
+                        _isListening ? Icons.mic : Icons.mic_none_rounded,
+                        color: _isListening ? Colors.redAccent : Color(0xFF673AB7),
+                        size: 28,
+                      ),
+                      onPressed: _isListening ? _stopListening : _startListening,
+                    ),
+                  ),
                 ),
-                elevation: 5,
+              ),
+            ),
+            SizedBox(height: 40),
+
+            // Translate Button
+            SizedBox(
+              height: 56,
+              child: ElevatedButton(
+                onPressed: _isLoading ? null : _convertToISL,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF673AB7),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
+                  shadowColor: Color(0xFF673AB7).withOpacity(0.4),
+                ),
+                child: _isLoading
+                    ? SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                )
+                    : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.translate_rounded, color: Colors.white),
+                    SizedBox(width: 12),
+                    Text(
+                      'Translate to ISL',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

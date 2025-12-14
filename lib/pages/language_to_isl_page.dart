@@ -71,7 +71,7 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
       }
 
       final response = await http.post(
-        Uri.parse('http://192.168.1.6:5000/convert_to_isl'),
+        Uri.parse('https://isl-backend-3zbp.onrender.com/convert_to_isl'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'text': textToConvert}),
       );

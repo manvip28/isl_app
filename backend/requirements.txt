@@ -1,3 +1,4 @@
 flask
 flask-cors
-nltk
+nltk==3.8.1
+gunicorn

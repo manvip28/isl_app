@@ -5,6 +5,12 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import string
+import nltk
+import os
+
+NLTK_DATA_DIR = os.path.join(os.getcwd(), "nltk_data")
+nltk.data.path.append(NLTK_DATA_DIR)
+
 
 # Initialize the Flask app first
 app = Flask(__name__)

@@ -8,7 +8,18 @@ Indian Sign Language (ISL) is a vital visual language used by the deaf and hard-
 The proposed solution leverages speech recognition, natural language processing, and computer vision to convert audio-visual content into ISL in real time. The system emphasizes accuracy, ease of use, and adaptability to regional ISL variations. Potential applications include converting public announcements (for example, railway platform displays) into ISL and enabling real-time sign language interpretation through a mobile camera, thereby fostering inclusive and accessible communication.
 
 ## Deployment Link
+
 https://isl-app-50765.web.app/ 
+
+## Android App (APK)
+
+You can download and install the Android APK from GitHub Releases:
+
+https://github.com/manvip28/isl_app/releases/tag/v1.0.0
+
+**Tested on:** Android 11+  
+**Note:** Allow “Install from unknown sources” when installing.
+
 
 ## Table of Contents
 

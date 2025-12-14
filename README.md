@@ -1,10 +1,14 @@
 
 ## AI tool/mobile app for Indian Sign language(ISL) generator from audio-visual content in English/Hindi to ISL content and vice-versa
 
-This is a Flutter-based mobile application that allows users to convert various languages to Indian Sign Language (ISL). The app utilizes a Flask backend for language translation and ISL video retrieval. Users can input text or speech, which is then translated to English and subsequently converted to ISL. Relevant ISL videos are fetched from a database and displayed to the user, enabling them to learn and practice ISL.
+This project presents a Flutter-based mobile application that enables two-way translation between spoken/text languages (English and Hindi) and Indian Sign Language (ISL). The system uses a Flask backend to handle speech recognition, language translation, and ISL content retrieval. Users can provide input via text or speech, which is translated and converted into corresponding ISL videos. Conversely, the app can interpret ISL gestures using the mobile camera to help non-signers understand sign language.
 
-Background: Indian Sign Language (ISL) is a visual-gestural language used by deaf and hard-of-hearing individuals across India. It encompasses a rich vocabulary of hand movements, facial expressions and body postures to convey messaging. ISL facilitates communication and fosters community among deaf individuals, enabling them to express emotions, share ideas and engage in every day interactions. Description: The need for audio to Indian Sign Language (ISL) conversion arrises from the communication barrier between the deaf community, which primarily uses ISL, and individuals who do not know sign language but communicate through spoken language. This barrier hinder effective communication in various settings, including education, healthcare and various interactions. Without a mean to convert audio into ISL, deaf individual faces challenging in accessing information and participating fully in society. Expected Solution: The expected solution entails developing technology-such as software or devices-capable of accurately converting spoken language to Indian Sign Language (ISL). This technology should use speech recognition, natural level processing, and computer vision to transcribe and interpret audio input, generating corresponding ISL gestures in real-time. It should prioritize accuracy, user-friendliness, and adaptibility to regional variation of ISL, thereby facilitating seamless communication between deaf individual and those who do not know sign language. For example: 1. Development of application by which announcement/ text display in railway platform Display Unit Converted to Indian Sign Language, so that deaf people can see it and understand the announcement. 2. Development of Mobile app through by which using Mobile Camera, normal person can understand sign language used by dead individuals. 
+Indian Sign Language (ISL) is a vital visual language used by the deaf and hard-of-hearing community in India. However, communication barriers exist between ISL users and the general population, especially in public spaces such as education, healthcare, and transportation. The absence of real-time ISL translation limits access to information and everyday interactions for deaf individuals.
 
+The proposed solution leverages speech recognition, natural language processing, and computer vision to convert audio-visual content into ISL in real time. The system emphasizes accuracy, ease of use, and adaptability to regional ISL variations. Potential applications include converting public announcements (for example, railway platform displays) into ISL and enabling real-time sign language interpretation through a mobile camera, thereby fostering inclusive and accessible communication.
+
+## Deployment Link
+https://isl-app-50765.web.app/ 
 
 ## Table of Contents
 
@@ -199,6 +203,11 @@ Ensure you have the following installed on your system:
 - **Flutter SDK**: 3.3.10
 - **Flask**: 2.2.2
 - **NLTK**: 3.7
+
+## Deployment
+
+- The Flask backend is deployed on Render, making the API publicly accessible without running the server locally.
+- The Flutter web application is deployed on Firebase Hosting, allowing users and recruiters to access the app directly via a browser.
 
 ## Troubleshooting
 

@@ -9,14 +9,16 @@ class DetectorServiceMobile implements DetectorService {
   final List<String> _characters = List.generate(26, (index) => String.fromCharCode(65 + index));
 
   @override
-  Future<void> loadModel() async {
+  Future<bool> loadModel() async {
     try {
       // Note: On mobile we load from assets, on web we might load from URL.
       // tflite_flutter loads directly from asset bundle.
       _interpreter = await Interpreter.fromAsset('assets/sign_language_model.tflite');
       print('Mobile Model loaded successfully');
+      return true;
     } catch (e) {
       print('Error loading mobile model: $e');
+      return false;
     }
   }
 

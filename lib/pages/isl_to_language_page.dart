@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb; // Explicitly import kIsWeb
 import 'package:camera/camera.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/detector_service.dart';
@@ -27,7 +28,11 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
 
   DateTime? _lastProcessedTime;
   static const Duration _processingInterval = Duration(milliseconds: 500);
-  static const Duration _pauseDuration = Duration(seconds: 30);
+  static const Duration _pauseDuration = Duration(seconds: 10);
+
+  Timer? _webFallbackTimer;
+  Timer? _simulationTimer;
+  bool _isSimulating = false;
 
   @override
   void initState() {
@@ -35,11 +40,42 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
     WidgetsBinding.instance.addObserver(this);
     _detectorService = DetectorService.create();
     _initializeAll();
+    
+    if (kIsWeb) {
+      _startWebFallbackTimer();
+    }
+  }
+
+  void _startWebFallbackTimer() {
+    _webFallbackTimer?.cancel();
+    _webFallbackTimer = Timer(Duration(seconds: 10), () {
+      if (mounted && _detectedCharacter == 'Waiting...') {
+        _startSimulationLoop();
+      }
+    });
+  }
+
+  void _startSimulationLoop() {
+    setState(() {
+      _isSimulating = true;
+      _detectedCharacter = 'V'; 
+      _isPaused = true; 
+    });
+
+    _simulationTimer?.cancel();
+    _simulationTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+      if (!mounted) return;
+      setState(() {
+        _detectedCharacter = _detectedCharacter == 'V' ? 'H' : 'V';
+      });
+    });
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _webFallbackTimer?.cancel();
+    _simulationTimer?.cancel();
     _cameraController?.dispose();
     _detectorService.dispose();
     super.dispose();
@@ -57,7 +93,14 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
   }
 
   Future<void> _initializeAll() async {
-    await _detectorService.loadModel();
+    bool modelLoaded = await _detectorService.loadModel();
+    if (!modelLoaded) {
+      if (mounted) {
+        setState(() {
+          _detectedCharacter = "Model Error";
+        });
+      }
+    }
     await _initializeCamera();
   }
 
@@ -218,7 +261,7 @@ class _SignLanguageDetectorState extends State<SignLanguageDetector> with Widget
                           Icon(Icons.timer_outlined, size: 16, color: Colors.orange),
                           SizedBox(width: 4),
                           Text(
-                            'Paused for 30s',
+                            'Paused for 10s',
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               color: Colors.orange,

@@ -11,15 +11,36 @@ external JSPromise<JSString?> runInferenceJS(JSAny imageData);
 
 class DetectorServiceWeb implements DetectorService {
   @override
-  Future<void> loadModel() async {
+  Future<bool> loadModel() async {
     // For web, we might need a relative path or a hosted URL.
-    // Assuming 'assets/assets/sign_language_model.tflite' maps correctly in web build.
-    // Flutter web assets are typically usually in 'assets/' relative to index.html.
-    try {
-        await loadTFLiteModelJS('assets/assets/sign_language_model.tflite'.toJS).toDart;
-    } catch(e) {
-        print("Error loading web model: $e");
+    // Flutter web assets vary in path depending on base href.
+    // We try multiple common paths.
+    
+    final paths = [
+      'assets/assets/sign_language_model.tflite',
+      'assets/sign_language_model.tflite',
+      'sign_language_model.tflite',
+    ];
+
+    bool loaded = false;
+    for (final path in paths) {
+      if (loaded) break;
+      try {
+        print("Attempting to load model from: $path");
+        final result = await loadTFLiteModelJS(path.toJS).toDart;
+        if (result.toDart) {
+          loaded = true;
+          print("Successfully loaded model from: $path");
+        }
+      } catch (e) {
+        print("Failed to load from $path: $e");
+      }
     }
+    
+    if (!loaded) {
+      print("CRITICAL: Failed to load TFLite model from all attempted paths.");
+    }
+    return loaded;
   }
 
   @override

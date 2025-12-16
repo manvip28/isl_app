@@ -16,7 +16,7 @@ https://isl-app-50765.web.app/
 
 You can download and install the Android APK from GitHub Releases:
 
-https://github.com/manvip28/isl_app/releases/tag/v1.0.0
+[https://github.com/manvip28/isl_app/releases/tag/v1.0.0](https://github.com/manvip28/isl_app/releases/tag/v1.0.1) 
 
 **Tested on:** Android 11+  
 **Note:** Allow “Install from unknown sources” when installing.
@@ -32,10 +32,10 @@ https://github.com/manvip28/isl_app/releases/tag/v1.0.0
 
 ## Platform Limitations
 
-Live ISL gesture detection uses a TensorFlow Lite model and is supported **only on the Android app**.
+Live ISL gesture detection is optimized for the Android app using a TensorFlow Lite model.
 
-Flutter Web runs in a browser environment and does not support TensorFlow Lite execution.  
-The web version is provided as a functional demo for UI flow and text-based ISL translation.
+In the web version, browser limitations can affect TensorFlow Lite execution. Therefore, the web deployment primarily serves as a demo for the application flow and text-based ISL translation, while gesture detection may not function as expected in all cases.
+
 
 ## Features
 

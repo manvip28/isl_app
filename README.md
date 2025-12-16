@@ -29,6 +29,13 @@ https://github.com/manvip28/isl_app/releases/tag/v1.0.0
 - **Mobile & Platform**: Android (APK release), Flutter Web (browser-based demo)
 - **DevOps & Tools**: Git & GitHub, GitHub Releases (APK distribution), Firebase CLI, Render deployment
 
+## ⚠️ Platform Limitations
+
+Live ISL gesture detection uses a TensorFlow Lite model and is supported **only on the Android app**.
+
+Flutter Web runs in a browser environment and does not support TensorFlow Lite execution.  
+The web version is provided as a functional demo for UI flow and text-based ISL translation.
+
 ## Developer Setup
 
 - [Project Structure](#project-structure)

@@ -5,7 +5,7 @@ import 'detector_service_stub.dart'
     if (dart.library.js_interop) 'detector_service_web.dart';
 
 abstract class DetectorService {
-  Future<void> loadModel();
+  Future<bool> loadModel();
   Future<String?> processImage(CameraImage image);
   void dispose();
 

@@ -129,6 +129,41 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
     );
   }
 
+  Widget _buildSuggestionChip(String text, String langCode) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _textController.text = text;
+          _selectedSourceLanguage = langCode;
+        });
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Color(0xFF673AB7).withOpacity(0.1)),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF673AB7).withOpacity(0.05),
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(
+            color: Color(0xFF673AB7),
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,6 +265,35 @@ class _LanguageToISLPageState extends State<LanguageToISLPage> {
                   ),
                 ),
               ),
+            ),
+            SizedBox(height: 24),
+
+            // Suggestions Section
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Suggestions',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF311B92),
+                  ),
+                ),
+                SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    _buildSuggestionChip('Hello', 'en'),
+                    _buildSuggestionChip('I like chocolate', 'en'),
+                    _buildSuggestionChip('Bright star shines.', 'en'),
+                    _buildSuggestionChip('Birds can fly.', 'en'),
+                    _buildSuggestionChip('पक्षी उड़ सकते हैं।', 'hi'),
+                    _buildSuggestionChip('ಪಕ್ಷಿಗಳು ಹಾರಬಲ್ಲವು.', 'kn'),
+                  ],
+                ),
+              ],
             ),
             SizedBox(height: 40),
 

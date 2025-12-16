@@ -1,13 +1,14 @@
 
 ## AI tool/mobile app for Indian Sign language(ISL) generator from audio-visual content in English/Hindi to ISL content and vice-versa
 
-This project presents a Flutter-based mobile application that enables two-way translation between spoken/text languages (English and Hindi) and Indian Sign Language (ISL). The system uses a Flask backend to handle speech recognition, language translation, and ISL content retrieval. Users can provide input via text or speech, which is translated and converted into corresponding ISL videos. Conversely, the app can interpret ISL gestures using the mobile camera to help non-signers understand sign language.
+This project is a Flutter-based application that enables two-way translation between spoken or written languages (English and Hindi) and Indian Sign Language (ISL). Users can input text, speech, or gestures to receive corresponding ISL video output or translated text, helping bridge communication gaps between signers and non-signers.
 
-Indian Sign Language (ISL) is a vital visual language used by the deaf and hard-of-hearing community in India. However, communication barriers exist between ISL users and the general population, especially in public spaces such as education, healthcare, and transportation. The absence of real-time ISL translation limits access to information and everyday interactions for deaf individuals.
+Indian Sign Language (ISL) is a vital visual language used by the deaf and hard-of-hearing community in India. However, communication barriers persist in public domains such as education, healthcare, and transportation due to the lack of accessible, real-time ISL translation tools.
 
-The proposed solution leverages speech recognition, natural language processing, and computer vision to convert audio-visual content into ISL in real time. The system emphasizes accuracy, ease of use, and adaptability to regional ISL variations. Potential applications include converting public announcements (for example, railway platform displays) into ISL and enabling real-time sign language interpretation through a mobile camera, thereby fostering inclusive and accessible communication.
+The proposed solution leverages speech recognition, natural language processing, and computer vision to provide real-time ISL translation. It focuses on accuracy, usability, and accessibility, with potential applications including public announcement translation and real-time sign language interpretation through a mobile camera.
 
-## Deployment Link
+
+## Web Demo
 
 https://isl-app-50765.web.app/ 
 
@@ -29,12 +30,39 @@ https://github.com/manvip28/isl_app/releases/tag/v1.0.0
 - **Mobile & Platform**: Android (APK release), Flutter Web (browser-based demo)
 - **DevOps & Tools**: Git & GitHub, GitHub Releases (APK distribution), Firebase CLI, Render deployment
 
-## ⚠️ Platform Limitations
+## Platform Limitations
 
 Live ISL gesture detection uses a TensorFlow Lite model and is supported **only on the Android app**.
 
 Flutter Web runs in a browser environment and does not support TensorFlow Lite execution.  
 The web version is provided as a functional demo for UI flow and text-based ISL translation.
+
+## Features
+
+- **Two-way ISL Translation**
+  - Converts English and Hindi text or speech into Indian Sign Language (ISL)
+  - Translates ISL gestures captured via the mobile camera into understandable text
+
+- **Real-Time Gesture Recognition (Android)**
+  - Uses a TensorFlow Lite model for on-device ISL gesture detection
+  - Works offline without sending camera data to a server
+
+- **Text & Speech Input Support**
+  - Accepts both typed text and spoken input for translation
+  - Provides flexibility for different user needs
+
+- **ISL Video-Based Output**
+  - Displays corresponding ISL videos for translated content
+  - Ensures clear and visually accurate sign representation
+
+- **Cross-Platform Support**
+  - Android mobile app with full functionality
+  - Web-based demo for interaction preview and text-based translation
+
+- **Scalable Backend Architecture**
+  - Flask-based REST API for NLP processing and ISL content retrieval
+  - Deployed on cloud infrastructure for public access
+
 
 ## Developer Setup
 
@@ -214,21 +242,6 @@ To run the application in the correct order, follow these steps:
    - If using a physical device, ensure the Flask server is running and properly set up for the device, as described in the [Run the Flask Server and Set Up for Physical Device](#run-the-flask-server-and-set-up-for-physical-device) section.
 3. Run main.dart to start the Flutter app.
 
-## Requirements
-
-Ensure you have the following installed on your system:
-
-- Python 3.11 or later
-- Flask
-- NLTK
-- Flutter SDK (for the front-end)
-
-## Versioning
-
-- **Python**: 3.11
-- **Flutter SDK**: 3.3.10
-- **Flask**: 2.2.2
-- **NLTK**: 3.7
 
 ## Deployment
 
